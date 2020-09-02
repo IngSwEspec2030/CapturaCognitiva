@@ -50,10 +50,10 @@ namespace CapturaCognitiva.Controllers.WebApiControllers
             {
                 try
                 {
-                   /* if (!ValidarTokenWeb(Token, _db))
+                    if (!ValidarTokenWeb(Token, _db))
                     {
                         return response.SetResponse(-1, false, "Acceso denegado token invalido");
-                    }*/
+                    }
                     if (!ModelState.IsValid)
                     {
                         return response.SetResponse(-2, false, "Informacion invalida", GetErroresModelo(ModelState));
