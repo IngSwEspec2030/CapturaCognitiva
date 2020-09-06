@@ -28,13 +28,13 @@ namespace CapturaCognitiva
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 7;
+                options.Password.RequireUppercase = false;               
                 options.Password.RequireNonAlphanumeric = false;
                 options.Lockout.AllowedForNewUsers = false;
                 options.SignIn.RequireConfirmedAccount = false;
                 options.SignIn.RequireConfirmedEmail = false;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
+                options.Password.RequireLowercase = false;
 
             });
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)

@@ -1,0 +1,66 @@
+﻿@model CapturaCognitiva.Models.AccountViewModels.RegisterViewModel;
+
+@{
+    ViewData["Title"] = "Registrar Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center">
+    <br />
+    <h3>Crear nuevo usuario </h3>
+</div>
+<partial name="_Message" />
+<div class="card card-primary">
+    <!-- /.card-header -->
+    <!-- form start -->
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <form asp-action="Register">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="Nombres" class="control-label"></label>
+                                <input asp-for="Nombres" class="form-control" />
+                                <span asp-validation-for="Nombres" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="Cedula" class="control-label"></label>
+                                <input asp-for="Cedula" class="form-control" />
+                                <span asp-validation-for="Cedula" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="Email" class="control-label"></label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="Rol" class="control-label"></label>
+                                @Html.DropDownListFor(x => x.Rol, (SelectList)ViewBag.RoleTypeList, new { @class = "form-control", id = "Rol" })
+                                @Html.ValidationMessageFor(model => model.Rol, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Guardar" class="btn btn-success" />
+                        @Html.ActionLink("Volver", "Usuarios", new { }, new { @class = "btn btn-info btn-large" })
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+﻿@model CapturaCognitiva.Models.AccountViewModels.EditViewModels
+
+@{
+    ViewData["Title"] = "Editar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center">
+    <br />
+    <h3>Editar usuario </h3>
+</div>
+<br />
+<div class="row">
+    <div class="col">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Nombres" class="control-label"></label>
+                <input asp-for="Nombres" class="form-control" />
+                <span asp-validation-for="Nombres" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cedula" class="control-label"></label>
+                <input asp-for="Cedula" class="form-control" />
+                <span asp-validation-for="Cedula" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="form-group">
+                    <label asp-for="Rol" class="control-label"></label>
+                    @Html.DropDownListFor(x => x.Rol, (SelectList)ViewBag.RoleTypeList, new { @class = "form-control", id = "Rol" })
+                    @Html.ValidationMessageFor(model => model.Rol, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-success" />
+                @Html.ActionLink("Volver", "Usuarios", new { }, new { @class = "btn btn-info btn-large" })
+            </div>
+        </form>
+    </div>
+</div>
+
+
+

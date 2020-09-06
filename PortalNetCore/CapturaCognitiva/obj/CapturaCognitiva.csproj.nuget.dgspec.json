@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Diego\\Documents\\GitHub\\CapturaCognitiva\\PortalNetCore\\CapturaCognitiva\\CapturaCognitiva.csproj": {}
+    "C:\\Users\\Admin472\\Desktop\\IngSoftPro\\CapturaCognitiva\\PortalNetCore\\CapturaCognitiva\\CapturaCognitiva.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Diego\\Documents\\GitHub\\CapturaCognitiva\\PortalNetCore\\CapturaCognitiva\\CapturaCognitiva.csproj": {
+    "C:\\Users\\Admin472\\Desktop\\IngSoftPro\\CapturaCognitiva\\PortalNetCore\\CapturaCognitiva\\CapturaCognitiva.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Diego\\Documents\\GitHub\\CapturaCognitiva\\PortalNetCore\\CapturaCognitiva\\CapturaCognitiva.csproj",
+        "projectUniqueName": "C:\\Users\\Admin472\\Desktop\\IngSoftPro\\CapturaCognitiva\\PortalNetCore\\CapturaCognitiva\\CapturaCognitiva.csproj",
         "projectName": "CapturaCognitiva",
-        "projectPath": "C:\\Users\\Diego\\Documents\\GitHub\\CapturaCognitiva\\PortalNetCore\\CapturaCognitiva\\CapturaCognitiva.csproj",
-        "packagesPath": "C:\\Users\\Diego\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Diego\\Documents\\GitHub\\CapturaCognitiva\\PortalNetCore\\CapturaCognitiva\\obj\\",
+        "projectPath": "C:\\Users\\Admin472\\Desktop\\IngSoftPro\\CapturaCognitiva\\PortalNetCore\\CapturaCognitiva\\CapturaCognitiva.csproj",
+        "packagesPath": "C:\\Users\\Admin472\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Admin472\\Desktop\\IngSoftPro\\CapturaCognitiva\\PortalNetCore\\CapturaCognitiva\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\Diego\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin472\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

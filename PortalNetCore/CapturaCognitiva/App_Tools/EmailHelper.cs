@@ -14,15 +14,13 @@ namespace CapturaCognitiva.Models.Response
     {
         private string ApiKey { get; set; }
         private readonly IWebHostEnvironment _env;
-        private readonly ApplicationDbContext _db;
-        public EmailHelper(IWebHostEnvironment env, ApplicationDbContext context)
+        public EmailHelper(IWebHostEnvironment env)
         {
             _env = env;
-            _db = context;
         }
         private string BodyRegisterAccount(string nombres, string passgeneric)
         {
-            string path = Path.Combine(_env.WebRootPath, "BodyEmails/BodyEmailConfirmacion.html");
+            string path = Path.Combine(_env.WebRootPath, "BodyEmails/BodyEmailRecuperacionContraseña.html");
             string body = string.Empty;
             using (StreamReader reader = new StreamReader(path))
             {
@@ -34,17 +32,19 @@ namespace CapturaCognitiva.Models.Response
         }
 
 
-        public async Task<bool> SendRegisterAccountAsync(string nombres, string emailregister, string passgeneric)
+        public async Task<bool> SendPasswordRecovery(string nombres, string emailregister, string code)
         {
             try
             {
-                ApiKey = ConfigurationManager.AppSetting["App472Keys:App472_sendgrid"];
+                string routeCode = string.Concat(ConfigurationManager.AppSetting["CapturaCogninitvaKeys:UlrHost"],code); 
+                string path = Path.Combine(_env.WebRootPath, "BodyEmails/BodyEmailRecuperacionContraseña.html");
+                ApiKey = ConfigurationManager.AppSetting["CapturaCogninitvaKeys:App_sendgrid"];
                 var client = new SendGridClient(ApiKey);
-                var from = new EmailAddress("Notificaciones-noresponse@4-72.com.co", "Notificaciones 4-72");
-                var subject = $"Bienvenido : {nombres}";
+                var from = new EmailAddress("Notificaciones-noresponse@capturacognitiva.com.co", "Notificaciones");
+                var subject = $"Señor : {nombres}";
                 var to = new EmailAddress(emailregister, nombres);
-                var plainTextContent = "Registro App 4-72";
-                var htmlContent = BodyRegisterAccount(nombres, passgeneric);
+                var plainTextContent = "Recuperar contraseña";
+                var htmlContent = BodyRegisterAccount(nombres, routeCode);
                 var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                 var response = await client.SendEmailAsync(msg);
                 if (response.StatusCode.ToString() == "200" || response.StatusCode.ToString() == "Accepted" || response.StatusCode.ToString() == "202")
@@ -55,7 +55,6 @@ namespace CapturaCognitiva.Models.Response
                 {
                     return false;
                 }
-
             }
             catch
             {

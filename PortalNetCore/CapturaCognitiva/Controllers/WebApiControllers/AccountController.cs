@@ -4,109 +4,159 @@ using System.Threading.Tasks;
 using System.Transactions;
 using CapturaCognitiva.App_Tools;
 using CapturaCognitiva.Data;
+using CapturaCognitiva.Data.Entities;
+using CapturaCognitiva.Models.Response;
 using CapturaCognitiva.Models.ViewModelsApi;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CapturaCognitiva.Controllers.WebApiControllers
 {
-    [Route("api/Cuenta")]
+    [Route("api/Account")]
     [ApiController]
     public class AccountController : WebApiController
     {
         private readonly IWebHostEnvironment _env;
         private readonly ApplicationDbContext _db;
-        private readonly IConfiguration _config;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AccountController(ApplicationDbContext context, IConfiguration config, UserManager<ApplicationUser> userManager,
+        public AccountController(ApplicationDbContext context,
             SignInManager<ApplicationUser> signInManager, IWebHostEnvironment env)
         {
             _env = env;
             _db = context;
-            _config = config;
             _signInManager = signInManager;
-            _userManager = userManager;
+
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="Token"></param>
-        /// <returns></returns>
-        [Route("Registrar")]
-        public async Task<ResponseHelper> RegistrarAsync([FromBody] RegisterApIViewModels model, [FromHeader] string Token)
+        [Route("Login")]
+        public async Task<IActionResult> LoginAsync([FromBody] LoginApiViewModels model, [FromHeader] string Token)
         {
-            var response = new ResponseHelper();
-            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted, Timeout = TransactionManager.MaximumTimeout }, TransactionScopeAsyncFlowOption.Enabled))
+            var response = new ResponseLogin();
+            using TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted, Timeout = TransactionManager.MaximumTimeout }, TransactionScopeAsyncFlowOption.Enabled);
+            try
             {
-                try
+                if (!ValidarTokenWeb(Token))
                 {
-                    if (!ValidarTokenWeb(Token, _db))
+                    return Ok(response.SetResponseLogin(-1, false, "Acceso denegado token invalido"));
+                }
+                if (!ModelState.IsValid)
+                {
+                    return Ok(response.SetResponseLogin(-2, false, "Informacion invalida", null, GetErroresModelo(ModelState)));
+                }
+                var User = _db.ApplicationUsers.FirstOrDefault(c => c.Email == model.Email);
+                if (User != null)
+                {
+                    var roles = SessionData.GetNameRole(_db, User.Id);
+                    if (roles != "Operador" && roles != "Administrador")
                     {
-                        return response.SetResponse(-1, false, "Acceso denegado token invalido");
+                        return BadRequest(response.SetResponseLogin(-3, false, "Rol invalido"));
                     }
-                    if (!ModelState.IsValid)
+                    if (User.LockoutEnabled)
                     {
-                        return response.SetResponse(-2, false, "Informacion invalida", GetErroresModelo(ModelState));
+                        return Ok(response.SetResponseLogin(-4, false, "Se ha bloqueado tu usuario"));
                     }
-                    string telefono = null;
-                    if (!string.IsNullOrEmpty(model.Telefono))
+                    if (User.IsRemoved)
                     {
-                        telefono = model.Telefono;
+                        return Ok(response.SetResponseLogin(-8, false, $"El usuario no existe"));
                     }
-                    var _useremail = _db.ApplicationUsers.FirstOrDefault(c => c.Email == model.Email);
-                    if (_useremail != null)
+                    if (!User.IsEnabled)
                     {
-                        return response.SetResponse(-3, false, "El email ya existe");
+                        return Ok(response.SetResponseLogin(-5, false, "Usuario inhabilitado."));
                     }
-                    var user = new ApplicationUser()
+                    var result = await _signInManager.PasswordSignInAsync(User.UserName, model.Contraseña, false, lockoutOnFailure: false);
+                    if (result.Succeeded)
                     {
-                        UserName = model.Email,
-                        Email = model.Email,
-                        EmailConfirmed = false,
-                        IsEnabled = true,
-                        DateEnabled = DateTime.Now,
-                        PhoneNumber = telefono,
-                        LockoutEnabled = false,
-                        Attemps = 0,
-                        Nombres = model.Nombres,
-                        DateCreated = DateTime.Now,
-                    };
-                    string _passgeneric = "Colombia123*";
-                    var result = await _userManager.CreateAsync(user, _passgeneric);
-
-                    if (!result.Succeeded)
+                        return Ok(response.SetResponseLogin(1, true, "Exitoso", null, User.Nombres, User.Id));
+                    }
+                    if (result.IsLockedOut)
                     {
-                        scope.Dispose();
-                        return response.SetResponse(-2, false, "Informacion invalida ", result.Succeeded.ToString());
+                        return Ok(response.SetResponseLogin(-3, false, "Se ha bloqueado tu usuario"));
                     }
                     else
-                    {                        
-                        scope.Complete();
-                        return response.SetResponse(1, true, "Usuario creado, verifique su correo :" + model.Email);
+                    {
+                        return Ok(response.SetResponseLogin(-3, false, "Informacion invalida"));
                     }
                 }
-                catch
-                {
-                    scope.Dispose();
-                    return response.SetResponse(-9, false, "Ocurrio un error, comuniquese con el administrador");
-                    throw;
-                }
+                return Ok(response.SetResponseLogin(-8, false, $"El usuario no existe"));
+
+            }
+            catch
+            {
+                scope.Dispose();
+                return StatusCode(500, response.SetResponseLogin(-9, false, "Ocurrio un error, comuniquese con el administrador"));
+                throw;
             }
 
         }
 
+        [Route("RecoveryPassword")]
+        public async Task<IActionResult> RecoveryPassword([FromBody] RecoveryPasswordApiViewModels model, [FromHeader] string Token)
+        {
+            var response = new ResponseRecoveryPassword();
+            using TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted, Timeout = TransactionManager.MaximumTimeout }, TransactionScopeAsyncFlowOption.Enabled);
+            try
+            {
+                if (!ValidarTokenWeb(Token))
+                {
+                    return Ok(response.SetResponseRecoveryPassword(-1, false, "Acceso denegado token invalido"));
+                }
+                if (!ModelState.IsValid)
+                {
+                    return Ok(response.SetResponseRecoveryPassword(-2, false, "Informacion invalida", GetErroresModelo(ModelState)));
+                }
+                var userForgot = _db.ApplicationUsers.FirstOrDefault(c => c.Email == model.Email);
+                if (userForgot == null)
+                {
+                    ModelState.AddModelError("", "Informacion invalida.");
+                }
+                var codigoForgotPassword = _db.CodigoForgotPasswords.FirstOrDefault(c => c.ApplicationUser.Email == model.Email && !c.IsUsed);
+                if (codigoForgotPassword == null)
+                {
+                    CodigoForgotPassword codigoUserForgot = new CodigoForgotPassword
+                    {
+                        ApplicationUserId = userForgot.Id,
+                        Code = Encryptor.GeneratePassword(),
+                        FechaCreacion = DateTime.Now,
+                        FechaUso = null,
+                        IsUsed = false
+                    };
+                    _db.Add(codigoUserForgot);
+                    _db.SaveChanges();
+                    EmailHelper emailHelper = new EmailHelper(_env);
+                    if (await emailHelper.SendPasswordRecovery(userForgot.Nombres, userForgot.Email, codigoUserForgot.Code))
+                    {
+                        return Ok(response.SetResponseRecoveryPassword(1, true, "Revise su correo por favor"));
+                    }
+                    else
+                    {
+                        return Ok(response.SetResponseRecoveryPassword(-3, false, "Reintente nuevamente"));
+                    }
+                }
+                else
+                {
+                    EmailHelper emailHelper = new EmailHelper(_env);
+                    if (await emailHelper.SendPasswordRecovery(userForgot.Nombres, userForgot.Email, codigoForgotPassword.Code))
+                    {
+                        return Ok(response.SetResponseRecoveryPassword(1, true, "Revise su correo por favor"));
+                    }
+                    else
+                    {
+                        return Ok(response.SetResponseRecoveryPassword(-3, false, "Reintente nuevamente"));
+                    }
+                }
+            }
+            catch
+            {
+                scope.Dispose();
+                return StatusCode(500, response.SetResponseRecoveryPassword(-9, false, "Ocurrio un error, comuniquese con el administrador"));
+                throw;
+            }
 
-
-
+        }
     }
 }

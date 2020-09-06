@@ -28,10 +28,21 @@ namespace CapturaCognitiva.Controllers
                 return View();
             }
             else
+            {                
+                return RedirectToAction("Login", "Accounts");
+            }
+        }
+        public IActionResult ForgotPassword()
+        {
+            if (!_signInManager.IsSignedIn(User))
+            {
+
+                return View();
+            }
+            else
             {
                 return RedirectToAction("Login", "Accounts");
             }
-
         }
 
         public IActionResult Privacy()

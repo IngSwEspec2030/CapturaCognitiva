@@ -16,11 +16,11 @@ namespace CapturaCognitiva.App_Tools
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public bool ValidarTokenWeb(string token, ApplicationDbContext context)
+        public bool ValidarTokenWeb(string token)
         {
             try
             {
-                string _Token = ConfigurationManager.AppSetting["App472Keys:App472_keyWeb"];
+                string _Token = ConfigurationManager.AppSetting["CapturaCogninitvaKeys:App_key"];
                 if (!string.IsNullOrEmpty(token))
                 {
                     if (token == _Token)

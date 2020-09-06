@@ -19,6 +19,35 @@ namespace CapturaCognitiva.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("CapturaCognitiva.Data.Entities.CodigoForgotPassword", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaUso")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("CodigoForgotPasswords");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -232,6 +261,9 @@ namespace CapturaCognitiva.Data.Migrations
                     b.Property<int>("Attemps")
                         .HasColumnType("int");
 
+                    b.Property<long>("Cedula")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime?>("DateBlock")
                         .HasColumnType("datetime2");
 
@@ -260,6 +292,13 @@ namespace CapturaCognitiva.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
+            modelBuilder.Entity("CapturaCognitiva.Data.Entities.CodigoForgotPassword", b =>
+                {
+                    b.HasOne("CapturaCognitiva.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

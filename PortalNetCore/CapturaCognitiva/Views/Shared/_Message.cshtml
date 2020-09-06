@@ -1,0 +1,50 @@
+﻿@if (ViewBag.MessageList != null)
+{
+    foreach (var item in ViewBag.MessageList)
+    {
+        if (!item.IsNotification)
+        {
+            if (!string.IsNullOrEmpty(item.Text))
+            {
+
+                <div class="alert alert-@item.Type.ToString().ToLower() border-@item.Type.ToString().ToLower() alert-dismissable" title="@item.Title">
+                    <a href="#" class="close col-12 text-right" data-dismiss="alert" aria-hidden="true" title="cerrar">&times;</a>
+                    <div class="align-center text-center align-middle">
+                        @*<h4>
+                                <font style="vertical-align: inherit;">
+                                    @item.Title
+                                </font>
+                            </h4>*@
+                        <div class="netfunny_icon netfunny_@item.Type.ToString().ToLower()" style="width: 100%;"> </div>
+                        <h4>
+                            <font>
+                                @item.Text
+                            </font>
+                        </h4>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <script src="~/Scripts/js/jquery-1.8.3.min.js"></script>
+            <script type="text/javascript" src="~/Scripts/js/gritter/js/jquery.gritter.js"></script>
+            <script type="text/javascript" src="~/Scripts/js/gritter-conf.js"></script>
+            <script type="text/javascript">
+            var notificationMsg = '@item.Text';
+            var notificationTitle = '@item.Title';
+            var notificationImage = '@ViewBag.NotificationImage';
+            if (notification) {
+                $.gritter.add({
+                    title: notificationTitle ? "Notificación" : notificationTitle,
+                    text: notificationMsg,
+                    image: notificationImage,
+                    sticky: true,
+                    time: '',
+                    class_name: 'my-sticky-class'
+                });
+            }
+            </script>
+        }
+    }
+}
