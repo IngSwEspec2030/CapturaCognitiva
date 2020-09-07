@@ -69,6 +69,11 @@ namespace CapturaCognitiva.Controllers
                     ModelState.AddModelError(string.Empty, "Cuenta bloqueada, comuniquese con el administrador");
                     return View(model);
                 }
+                var roles = SessionData.GetNameRole(_db, user.Id);
+                if (roles != "Administrador" && roles != "OperadorDigitalizador")
+                {
+                    ModelState.AddModelError(string.Empty, "Acceso invalido, comuniquese con el adminsitrador");
+                }
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
 
                 if (result.Succeeded)
@@ -90,7 +95,7 @@ namespace CapturaCognitiva.Controllers
             }
             return View();
         }
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Administrador,OperadorDigitalizador")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

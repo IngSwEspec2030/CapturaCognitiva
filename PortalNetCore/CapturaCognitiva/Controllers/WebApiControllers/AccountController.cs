@@ -42,17 +42,17 @@ namespace CapturaCognitiva.Controllers.WebApiControllers
             {
                 if (!ValidarTokenWeb(Token))
                 {
-                    return Ok(response.SetResponseLogin(-1, false, "Acceso denegado token invalido"));
+                    return BadRequest(response.SetResponseLogin(-1, false, "Acceso denegado token invalido"));
                 }
                 if (!ModelState.IsValid)
                 {
-                    return Ok(response.SetResponseLogin(-2, false, "Informacion invalida", null, GetErroresModelo(ModelState)));
+                    return BadRequest(response.SetResponseLogin(-2, false, "Informacion invalida", null, GetErroresModelo(ModelState)));
                 }
                 var User = _db.ApplicationUsers.FirstOrDefault(c => c.Email == model.Email);
                 if (User != null)
                 {
                     var roles = SessionData.GetNameRole(_db, User.Id);
-                    if (roles != "Operador" && roles != "Administrador")
+                    if (roles != "OperadorMobile")
                     {
                         return BadRequest(response.SetResponseLogin(-3, false, "Rol invalido"));
                     }
@@ -62,7 +62,7 @@ namespace CapturaCognitiva.Controllers.WebApiControllers
                     }
                     if (User.IsRemoved)
                     {
-                        return Ok(response.SetResponseLogin(-8, false, $"El usuario no existe"));
+                        return BadRequest(response.SetResponseLogin(-8, false, $"El usuario no existe"));
                     }
                     if (!User.IsEnabled)
                     {
@@ -79,10 +79,10 @@ namespace CapturaCognitiva.Controllers.WebApiControllers
                     }
                     else
                     {
-                        return Ok(response.SetResponseLogin(-3, false, "Informacion invalida"));
+                        return BadRequest(response.SetResponseLogin(-3, false, "Informacion invalida"));
                     }
                 }
-                return Ok(response.SetResponseLogin(-8, false, $"El usuario no existe"));
+                return BadRequest(response.SetResponseLogin(-8, false, $"El usuario no existe"));
 
             }
             catch
@@ -103,11 +103,11 @@ namespace CapturaCognitiva.Controllers.WebApiControllers
             {
                 if (!ValidarTokenWeb(Token))
                 {
-                    return Ok(response.SetResponseRecoveryPassword(-1, false, "Acceso denegado token invalido"));
+                    return BadRequest(response.SetResponseRecoveryPassword(-1, false, "Acceso denegado token invalido"));
                 }
                 if (!ModelState.IsValid)
                 {
-                    return Ok(response.SetResponseRecoveryPassword(-2, false, "Informacion invalida", GetErroresModelo(ModelState)));
+                    return BadRequest(response.SetResponseRecoveryPassword(-2, false, "Informacion invalida", GetErroresModelo(ModelState)));
                 }
                 var userForgot = _db.ApplicationUsers.FirstOrDefault(c => c.Email == model.Email);
                 if (userForgot == null)

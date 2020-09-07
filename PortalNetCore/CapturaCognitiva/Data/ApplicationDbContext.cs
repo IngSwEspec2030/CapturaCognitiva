@@ -26,6 +26,10 @@ namespace CapturaCognitiva.Data
     {
         public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public virtual DbSet<CodigoForgotPassword> CodigoForgotPasswords { get; set; }
+        public virtual DbSet<Guide> Guides { get; set; }
+        public virtual DbSet<Image> Images { get; set; }
+        public virtual DbSet<Sender> Senders { get; set; }
+        public virtual DbSet<Receiver> Receivers { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

@@ -1,0 +1,119 @@
+﻿@model CapturaCognitiva.Models.ViewModels.ImageFormViewModels
+
+@{
+    ViewData["Title"] = "Imagenes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+</style>
+<div class="text-center">
+    <br />
+    <h2>Ingrese la informacion faltante</h2>
+</div>
+<partial name="_Message" />
+<br />
+<div class="row">
+    <div class="col">
+        @if (ViewBag.isImagen)
+        {
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="row">
+                    <div class="col-6">
+                        <figure>
+                            <img src="data:image;base64,@Model.ImageBase64" class="img-bordered img-fluid" />
+                        </figure>
+                    </div>
+                    <div class="col text-center">
+                        <h3> Remitente </h3>
+                        <div class="col text-left">
+                            <div class="form-group">
+                                <label asp-for="NameSender" class="control-label"></label>
+                                <input asp-for="NameSender" class="form-control" />
+                                <span asp-validation-for="NameSender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col text-left">
+                            <div class="form-group">
+                                <label asp-for="AddressSender" class="control-label"></label>
+                                <input asp-for="AddressSender" class="form-control" />
+                                <span asp-validation-for="AddressSender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col text-left">
+                            <div class="form-group">
+                                <label asp-for="CellSender" class="control-label"></label>
+                                <input asp-for="CellSender" class="form-control" />
+                                <span asp-validation-for="CellSender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col text-left">
+                            <div class="form-group">
+                                <label asp-for="StateSender" class="control-label"></label>
+                                <input asp-for="StateSender" class="form-control" />
+                                <span asp-validation-for="StateSender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <h3> Receptor </h3>
+                        <div class="col text-left">
+                            <div class="form-group">
+                                <label asp-for="NameReceiver" class="control-label"></label>
+                                <input asp-for="NameReceiver" class="form-control" />
+                                <span asp-validation-for="NameReceiver" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col text-left">
+                            <div class="form-group">
+                                <label asp-for="AddressReceiver" class="control-label"></label>
+                                <input asp-for="AddressReceiver" class="form-control" />
+                                <span asp-validation-for="AddressReceiver" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col text-left">
+                            <div class="form-group">
+                                <label asp-for="CellReceiver" class="control-label"></label>
+                                <input asp-for="CellReceiver" class="form-control" />
+                                <span asp-validation-for="CellReceiver" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col text-left">
+                            <div class="form-group">
+                                <label asp-for="StateSender" class="control-label"></label>
+                                <input asp-for="StateSender" class="form-control" />
+                                <span asp-validation-for="StateSender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <input type="submit" value="Guardar" class="btn btn-success btn-lg btn-block" />
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-3">
+                            </div>
+                            <div class="col-3">
+                                @if (ViewBag.IdImageAnterior != 0)
+                                {
+                                    <a class="btn btn-lg btn-default" href="@Url.Action("Find", new { id=ViewBag.IdImageAnterior})" title="Anterior">
+                                        <i class="fa fa-arrow-left"></i>
+                                    </a>
+                                }
+                            </div>
+                            <div class="col-3 text-right">
+                                @if (ViewBag.IdImageSiguiente != 0)
+                                {
+                                    <a class="btn btn-lg btn-default" href="@Url.Action("Find", new { id=ViewBag.IdImageSiguiente})" title="Siguiente">
+                                        <i class="fa fa-arrow-right"></i>
+                                    </a>
+                                }
+                            </div>
+                            <div class="col-3">
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            </form>
+        }
+    </div>
+</div>

@@ -24,11 +24,11 @@ namespace CapturaCognitiva
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(
 
-                   Configuration.GetConnectionString("Development")));
+                   Configuration.GetConnectionString("Development")).UseLazyLoadingProxies());
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = false;
-                options.Password.RequireUppercase = false;               
+                options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Lockout.AllowedForNewUsers = false;
                 options.SignIn.RequireConfirmedAccount = false;

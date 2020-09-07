@@ -30,7 +30,7 @@
                     <li class="nav-item">
                         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                     </li>
-                    @if (User.IsInRole("Administrador"))
+                    @if (User.IsInRole("Administrador") || User.IsInRole("OperadorDigitalizador"))
                     {
                         <li class="nav-item ">
                             <a asp-controller="Accounts" asp-action="Logout" class="nav-link">
@@ -94,8 +94,21 @@
                                             Procesar envios
                                         </p>
                                     </a>
-                                </li>                              
-                            }                         
+                                </li>
+
+                            }
+                            @if (User.IsInRole("OperadorDigitalizador"))
+                            {                               
+                                <li class="nav-item ">
+                                    <a asp-controller="ManageImages" asp-action="Index" class="nav-link">
+                                        <i class="nav-icon fas fa-user"></i>
+                                        <p>
+                                            Procesar envios
+                                        </p>
+                                    </a>
+                                </li>
+
+                            }
 
                         </ul>
                     </nav>
