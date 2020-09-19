@@ -55,7 +55,7 @@ namespace CapturaCognitiva.Controllers.WebApiControllers
                     var responseAnalyzer = awsImage.AnalyserImage(model.ImageBase64);
                     if (responseAnalyzer.Success)
                     {
-                        if (_db.Images.FirstOrDefault(c=> c.Uuid==responseAnalyzer.Uuid)!=null) 
+                        if (_db.Images.FirstOrDefault(c => c.Uuid == responseAnalyzer.Uuid) != null)
                         {
                             return Ok(response.SetResponseRecoveryPassword(-5, false, "Uuid repetido, comuniquese con el administrador"));
                         }
@@ -83,16 +83,35 @@ namespace CapturaCognitiva.Controllers.WebApiControllers
                         };
                         _db.Images.Add(image);
                         _db.SaveChanges();
-                        Guide guide = new Guide
+                        if (responseAnalyzer.GuideInfo.Complete)
                         {
-                            ImageId = image.Id,
-                            IsCompleted = responseAnalyzer.GuideInfo.Complete,
-                            ReceiverId = receiver.Id,
-                            SenderId = sender.Id
-                        };
-                        _db.Guides.Add(guide);
-                        _db.SaveChanges();
-                        scope.Complete();
+                            Guide guide = new Guide
+                            {
+                                ImageId = image.Id,
+                                IsCompleted = responseAnalyzer.GuideInfo.Complete,
+                                IsUpload = true,
+                                ReceiverId = receiver.Id,
+                                SenderId = sender.Id,
+                                FechaUpload = DateTime.Now
+                            };
+                            _db.Guides.Add(guide);
+                            _db.SaveChanges();
+                            scope.Complete();
+                        }
+                        else
+                        {
+                            Guide guide = new Guide
+                            {
+                                ImageId = image.Id,
+                                IsCompleted = responseAnalyzer.GuideInfo.Complete,
+                                IsUpload = false,
+                                ReceiverId = receiver.Id,
+                                SenderId = sender.Id
+                            };
+                            _db.Guides.Add(guide);
+                            _db.SaveChanges();
+                            scope.Complete();
+                        }
                         return Ok(response.SetResponseRecoveryPassword(1, true, "exitoso"));
                     }
                     else
@@ -104,7 +123,7 @@ namespace CapturaCognitiva.Controllers.WebApiControllers
                 return BadRequest(response.SetResponseRecoveryPassword(-8, false, $"Informacion invalida"));
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 scope.Dispose();
                 return StatusCode(500, response.SetResponseRecoveryPassword(-9, false, "Ocurrio un error, comuniquese con el administrador"));

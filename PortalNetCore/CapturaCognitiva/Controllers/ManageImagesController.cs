@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace CapturaCognitiva.Controllers
@@ -43,14 +44,14 @@ namespace CapturaCognitiva.Controllers
                 var imageActual = _db.Guides.FirstOrDefault(c => !c.IsCompleted);
                 if (imageActual == null)
                 {
-                    ViewBag.isImagen=false;
+                    ViewBag.isImagen = false;
                     Message("No tiene imagenes pendientes", MessageType.Info);
                     return View();
                 }
                 else
                 {
                     ViewBag.isImagen = true;
-                    var imageSiguiente = _db.Guides.FirstOrDefault(c => !c.IsCompleted && c.Id != imageActual.Id && c.Id > imageActual.Id);
+                    var imageSiguiente = _db.Guides.FirstOrDefault(c => !c.IsCompleted && c.Id != imageActual.Id && c.Id > imageActual.Id && !c.IsUpload);
                     if (imageSiguiente != null)
                     {
                         ViewBag.IdImageSiguiente = imageSiguiente.Id;
@@ -103,9 +104,6 @@ namespace CapturaCognitiva.Controllers
                 return View();
                 throw;
             }
-
-
-
         }
         [Authorize(Roles = "Administrador,OperadorDigitalizador")]
         [HttpGet]
@@ -246,10 +244,39 @@ namespace CapturaCognitiva.Controllers
                 return View();
                 throw;
             }
-
-
-
         }
+
+        [Authorize(Roles = "Administrador,OperadorDigitalizador")]
+        [HttpPost]
+        public ActionResult Edit(ImageFormViewModels model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+                else
+                {
+                    var imageActual = _db.Guides.FirstOrDefault(c => !c.IsCompleted && c.Id == model.Id);
+                    imageActual.FechaUpload = DateTime.Now;
+                    imageActual.IsUpload = true;
+                    _db.Entry(imageActual).State = EntityState.Modified;                   
+                    _db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch
+            {
+                ViewBag.isImagen = false;
+                Message("Ocurrio un error comuniquese con el adminsitrador", MessageType.Danger);
+                return View();
+                throw;
+            }
+        }
+
+
+
 
     }
 }
