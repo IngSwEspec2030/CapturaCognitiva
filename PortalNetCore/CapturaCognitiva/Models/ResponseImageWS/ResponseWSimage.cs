@@ -36,7 +36,7 @@ namespace CapturaCognitiva.Models.ResponseImageWS
     {
         [JsonProperty("name")]
         public string Name { get; set; }
-        [JsonProperty("cell")]
+        [JsonProperty("phoneNumber")]
         public string Cell { get; set; }
         [JsonProperty("address")]
         public string Address { get; set; }
@@ -48,7 +48,7 @@ namespace CapturaCognitiva.Models.ResponseImageWS
     {
         [JsonProperty("name")]
         public string Name { get; set; }
-        [JsonProperty("cell")]
+        [JsonProperty("phoneNumber")]
         public string Cell { get; set; }
         [JsonProperty("address")]
         public string Address { get; set; }
