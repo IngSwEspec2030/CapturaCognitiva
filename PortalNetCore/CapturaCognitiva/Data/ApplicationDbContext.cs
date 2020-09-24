@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using CapturaCognitiva.Models.AccountViewModels;
 using CapturaCognitiva.Data.Migrations;
 using CapturaCognitiva.Data.Entities;
+using CapturaCognitiva.Models.ViewModels;
 
 namespace CapturaCognitiva.Data
 {
@@ -30,10 +31,16 @@ namespace CapturaCognitiva.Data
         public virtual DbSet<Image> Images { get; set; }
         public virtual DbSet<Sender> Senders { get; set; }
         public virtual DbSet<Receiver> Receivers { get; set; }
+        public virtual DbSet<imagenestest> Imagenestests { get; set; }
+
+        
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }    
+
+        
+        public DbSet<CapturaCognitiva.Models.ViewModels.DetailsGuideViewModels> DetailsGuideViewModels { get; set; }
 
     }
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:capturacognitivajaveriana/app/data/repositories/local_storage.dart';
 import 'package:capturacognitivajaveriana/app/data/services/captura_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:get/route_manager.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -36,7 +37,7 @@ class _CapturaPageState extends State<CapturaPage> {
                     border: Border.all(width: 2.0, color: Colors.blueGrey[200]),
                     borderRadius: BorderRadius.circular(12.0)),
                 child: AspectRatio(
-                  aspectRatio: 1,
+                  aspectRatio: 1280 / 1199,
                   child: _foto != null
                       ? _mostrarFoto()
                       : Icon(
@@ -56,17 +57,6 @@ class _CapturaPageState extends State<CapturaPage> {
                           fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                     onPressed: _tomarFoto),
-              ),
-              Container(
-                width: double.infinity,
-                child: FlatButton(
-                    color: Colors.blueAccent,
-                    child: Text(
-                      "SELECCIONAR DE LA GALERÍA",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                    onPressed: _seleccionarFoto),
               ),
               Text("Resultado"),
               loading ? CircularProgressIndicator() : SizedBox.shrink(),
@@ -92,7 +82,9 @@ class _CapturaPageState extends State<CapturaPage> {
                 height: double.infinity,
                 child: Image.file(
                   _foto,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
+                  height: 1280,
+                  width: 1199,
                   alignment: Alignment.center,
                 ),
               ),
@@ -119,20 +111,25 @@ class _CapturaPageState extends State<CapturaPage> {
     _procesarImagen(ImageSource.camera);
   }
 
-  void _seleccionarFoto() {
-    _procesarImagen(ImageSource.gallery);
-  }
-
   _procesarImagen(ImageSource origen) async {
     setState(() {
       result = "";
     });
     // Procesar foto marbete
     PickedFile pickedFile = await ImagePicker().getImage(
+      preferredCameraDevice: CameraDevice.rear,
       source: origen,
-      imageQuality: 90,
-      maxWidth: 400,
+      maxHeight: 1280,
+      maxWidth: 1199,
+      imageQuality: 10,
     );
+
+    // File compressedImage = await FlutterNativeImage.compressImage(
+    //   pickedFile.path,
+    //   percentage: 100,
+    //   quality: 20,
+    // );
+
     setState(() {
       _foto = File(pickedFile.path);
     });

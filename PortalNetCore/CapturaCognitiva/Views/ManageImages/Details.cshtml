@@ -1,0 +1,72 @@
+﻿@model CapturaCognitiva.Models.ViewModels.DetailsGuideViewModels
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Detalles</h1>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NameSender)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NameSender)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CellSender)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CellSender)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StateSender)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StateSender)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AddressSender)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AddressSender)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NameReceiver)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NameReceiver)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CellReceiver)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CellReceiver)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StateReceiver)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StateReceiver)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AddressReceiver)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AddressReceiver)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ImageBase64)
+        </dt>
+        <dd class="">
+            <figure>
+                <img src="data:image;base64,@Model.ImageBase64" class="img-bordered img-fluid" />
+            </figure>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Summary">Volver</a>
+</div>

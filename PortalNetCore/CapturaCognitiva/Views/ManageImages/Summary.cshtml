@@ -1,0 +1,74 @@
+﻿@model IEnumerable<CapturaCognitiva.Models.ViewModels.SummaryViewModels>
+@{
+    ViewBag.Title = "Guias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+
+</head>
+<div class="container-fluid">
+    <div class="text-center">
+        <br />
+        <h2>Resumen guias <i class="fa fa-list"></i></h2>
+        <br />
+    </div>
+    <partial name="_Message" />
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <table id="data" class="table table-bordered table-striped">
+                        <thead class="thead-light">
+                            <tr class="text-center">
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(model => model.Uuid)
+                                </th>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(model => model.IsComplete)
+                                </th>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(model => model.IsUpload)
+                                </th>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(model => model.FechaCarga)
+                                </th>
+                                <th class="text-center">
+                                    Opciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Uuid)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IsComplete)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IsUpload)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FechaCarga)
+                                    </td>
+                                    <td undownload="true">
+                                        <a class="btn btn-sm btn-default" href="@Url.Action("Details", new { id = item.Id })" title="Resumen">
+                                            <i class="fa fa-history"></i>
+                                        </a>                                        
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <partial name="_DataTable" />
+}

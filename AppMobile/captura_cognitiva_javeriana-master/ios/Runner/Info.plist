@@ -2,6 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Captura cognitiva necesita acceder a la galería para analizar las imagenes.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Captura cognitiva necesita acceder a la camara para analizar las fotos.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Captura cognitiva necesita acceder al micrófono junto con la cámara.</string>
+	<!--  -->
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

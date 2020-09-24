@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using CapturaCognitiva.App_Tools;
 using CapturaCognitiva.Data;
+using CapturaCognitiva.Data.Entities;
+using CapturaCognitiva.Data.Migrations;
 using CapturaCognitiva.Models.ViewModels;
 using CapturaCognitiva.WebServices;
 using Microsoft.AspNetCore.Authorization;
@@ -41,7 +43,7 @@ namespace CapturaCognitiva.Controllers
             {
                 ViewBag.IdImageAnterior = 0;
                 ViewBag.IdImageSiguiente = 0;
-                var imageActual = _db.Guides.FirstOrDefault(c => !c.IsCompleted);
+                var imageActual = _db.Guides.FirstOrDefault(c => !c.IsCompleted && !c.IsUpload);
                 if (imageActual == null)
                 {
                     ViewBag.isImagen = false;
@@ -254,14 +256,14 @@ namespace CapturaCognitiva.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(model);
+                    return RedirectToAction("Index");
                 }
                 else
                 {
                     var imageActual = _db.Guides.FirstOrDefault(c => !c.IsCompleted && c.Id == model.Id);
                     imageActual.FechaUpload = DateTime.Now;
                     imageActual.IsUpload = true;
-                    _db.Entry(imageActual).State = EntityState.Modified;                   
+                    _db.Entry(imageActual).State = EntityState.Modified;
                     _db.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -275,6 +277,87 @@ namespace CapturaCognitiva.Controllers
             }
         }
 
+
+        [Authorize(Roles = "Administrador,OperadorDigitalizador")]
+        public ActionResult Summary()
+        {
+            try
+            {
+                List<SummaryViewModels> imagesL = new List<SummaryViewModels>();
+                var ImagesSummary = _db.Guides.ToList();
+                if (ImagesSummary.Count == 0)
+                {
+                    Message("No existen imagenes", MessageType.Info);
+                }
+                foreach (var item in ImagesSummary)
+                {
+                    imagesL.Add(new SummaryViewModels
+                    {
+                        Id = item.Id,
+                        FechaCarga = item.FechaUpload,
+                        IsComplete = item.IsCompleted,
+                        IsUpload = item.IsUpload,
+                        Uuid = item.Image.Uuid
+                    });
+                };
+                return View(imagesL);
+            }
+            catch
+            {
+                ViewBag.isImagen = false;
+                Message("Ocurrio un error comuniquese con el adminsitrador", MessageType.Danger);
+                return View();
+                throw;
+            }
+        }
+
+        [Authorize(Roles = "Administrador,OperadorDigitalizador")]
+        public ActionResult Details(int id)
+        {
+            try
+            {
+                var guide = _db.Guides.FirstOrDefault(c => c.Id == id);
+                if (guide != null)
+                {
+                    WSImage wSImage = new WSImage();
+                    var responseWsImage = wSImage.GetImage(guide.Image.Uuid);
+                    if (responseWsImage.Success)
+                    {
+                        DetailsGuideViewModels summary = new DetailsGuideViewModels
+                        {
+                            id = guide.Id,
+                            NameReceiver = guide.Receiver.Name,
+                            AddressReceiver = guide.Receiver.Address,
+                            CellReceiver = guide.Receiver.Cell,
+                            StateReceiver = guide.Receiver.State,
+                            NameSender = guide.Sender.Name,
+                            AddressSender = guide.Sender.Address,
+                            CellSender = guide.Sender.Cell,
+                            StateSender = guide.Sender.State,
+                            ImageBase64 = responseWsImage.ImageBase64
+                        };
+                        return View(summary);
+                    }
+                    else
+                    {
+                        ViewBag.isImagen = false;
+                        Message("Ocurrio un error con la imagen comuniquese con el adminsitrador", MessageType.Danger);
+                        return View();
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+            catch
+            {
+                ViewBag.isImagen = false;
+                Message("Ocurrio un error comuniquese con el adminsitrador", MessageType.Danger);
+                return View();
+                throw;
+            }
+        }
 
 
 

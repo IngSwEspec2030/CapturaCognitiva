@@ -50,7 +50,10 @@ namespace CapturaCognitiva.Controllers.WebApiControllers
                 }
                 var User = _db.ApplicationUsers.FirstOrDefault(c => c.Id == model.UserToken);
                 if (User != null)
-                {
+                {                
+                    /*_db.Imagenestests.Add(new imagenestest { Image = model.ImageBase64 });
+                    _db.SaveChanges();
+                    scope.Complete();*/
                     WSImage awsImage = new WSImage();
                     var responseAnalyzer = awsImage.AnalyserImage(model.ImageBase64);
                     if (responseAnalyzer.Success)

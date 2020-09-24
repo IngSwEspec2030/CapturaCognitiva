@@ -4,7 +4,8 @@
     ViewData["Title"] = "Imagenes";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<style>
+
+<style> 
 </style>
 <div class="text-center">
     <br />
@@ -22,8 +23,9 @@
                 <div class="row">
                     <div class="col-6">
                         <figure>
-                            <img src="data:image;base64,@Model.ImageBase64" class="img-bordered img-fluid" />
+                            <img src="data:image;base64,@Model.ImageBase64" class="img-bordered img-fluid" id="image" />
                         </figure>
+                        
                     </div>
                     <div class="col text-center">
                         <h3> Remitente </h3>
@@ -79,13 +81,13 @@
                         </div>
                         <div class="col text-left">
                             <div class="form-group">
-                                <label asp-for="StateSender" class="control-label"></label>
-                                <input asp-for="StateSender" class="form-control" />
-                                <span asp-validation-for="StateSender" class="text-danger"></span>
+                                <label asp-for="StateReceiver" class="control-label"></label>
+                                <input asp-for="StateReceiver" class="form-control" />
+                                <span asp-validation-for="StateReceiver" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row">
-                            <input type="submit" value="Guardar" class="btn btn-success btn-lg btn-block" />
+                            <input type="submit" value="Guardar" class="btn btn-success btn-lg btn-block" />                            
                         </div>
                         <br />
                         <div class="row">
@@ -117,3 +119,5 @@
         }
     </div>
 </div>
+<script> 
+</script>
