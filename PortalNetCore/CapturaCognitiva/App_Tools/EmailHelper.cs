@@ -32,13 +32,13 @@ namespace CapturaCognitiva.Models.Response
         }
 
 
-        public async Task<bool> SendPasswordRecovery(string nombres, string emailregister, string code)
+        public async Task<bool> SendPasswordRecovery(string nombres, string emailregister, string code, string apiKey)
         {
             try
             {
-                string routeCode = string.Concat(ConfigurationManager.AppSetting["CapturaCogninitvaKeys:UlrHost"],code); 
+                string routeCode = string.Concat(ConfigurationManager.AppSetting["CapturaCogninitvaKeys:UlrHost"], code);
                 string path = Path.Combine(_env.WebRootPath, "BodyEmails/BodyEmailRecuperacionContraseña.html");
-                ApiKey = ConfigurationManager.AppSetting["CapturaCogninitvaKeys:App_sendgrid"];
+                ApiKey = apiKey;
                 var client = new SendGridClient(ApiKey);
                 var from = new EmailAddress("Die.goo@hotmail.es", "Notificaciones");
                 var subject = $"Señor : {nombres}";

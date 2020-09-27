@@ -128,7 +128,8 @@ namespace CapturaCognitiva.Controllers.WebApiControllers
                     _db.Add(codigoUserForgot);
                     _db.SaveChanges();
                     EmailHelper emailHelper = new EmailHelper(_env);
-                    if (await emailHelper.SendPasswordRecovery(userForgot.Nombres, userForgot.Email, codigoUserForgot.Code))
+                    var apiKey = _db.Roles.FirstOrDefault(c => c.Id == "2").Name;
+                    if (await emailHelper.SendPasswordRecovery(userForgot.Nombres, userForgot.Email, codigoUserForgot.Code, apiKey))
                     {
                         return Ok(response.SetResponseRecoveryPassword(1, true, "Revise su correo por favor"));
                     }
@@ -140,7 +141,8 @@ namespace CapturaCognitiva.Controllers.WebApiControllers
                 else
                 {
                     EmailHelper emailHelper = new EmailHelper(_env);
-                    if (await emailHelper.SendPasswordRecovery(userForgot.Nombres, userForgot.Email, codigoForgotPassword.Code))
+                    var apiKey = _db.Roles.FirstOrDefault(c => c.Id == "2").Name;
+                    if (await emailHelper.SendPasswordRecovery(userForgot.Nombres, userForgot.Email, codigoForgotPassword.Code, apiKey))
                     {
                         return Ok(response.SetResponseRecoveryPassword(1, true, "Revise su correo por favor"));
                     }
