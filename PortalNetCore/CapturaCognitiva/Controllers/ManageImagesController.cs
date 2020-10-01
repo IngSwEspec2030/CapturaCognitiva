@@ -261,6 +261,22 @@ namespace CapturaCognitiva.Controllers
                 else
                 {
                     var imageActual = _db.Guides.FirstOrDefault(c => !c.IsCompleted && c.Id == model.Id);
+                    imageActual.Receiver = new Receiver
+                    {
+                        Id = imageActual.ReceiverId,
+                        Address = model.AddressReceiver,
+                        Cell = model.CellReceiver,
+                        Name = model.NameReceiver,
+                        State = model.StateReceiver
+                    };
+                    imageActual.Sender = new Sender
+                    {
+                        Id = imageActual.SenderId,
+                        Address = model.AddressSender,
+                        Cell = model.CellSender,
+                        Name = model.NameSender,
+                        State = model.StateSender
+                    };
                     imageActual.FechaUpload = DateTime.Now;
                     imageActual.IsUpload = true;
                     _db.Entry(imageActual).State = EntityState.Modified;
